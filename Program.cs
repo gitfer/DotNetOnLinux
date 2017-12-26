@@ -7,7 +7,10 @@
 	        static void Main(string[] args)
 	        {
 	            Engine engine = new Engine();
-	            Consumer consumer = new Consumer(engine);
+	            Consumer consumer = new Consumer("consumer1", engine);
+	            Consumer consumer2 = new Consumer("consumer2", engine);
+	            engine.SwitchGear();
+	            consumer.Unsubscribe();
 	            engine.SwitchGear();
 	        }
 	    }
@@ -23,6 +26,8 @@
 	      public void SwitchGear(){
 	      	var oldGear = _currentGear;
 	      	_currentGear = _currentGear+1;
+	      	Console.WriteLine("Publisher: changing gears...");
+	      	Console.WriteLine("Publisher: Notifying registered subscribers...");
 	      	this.OnSwitchGear(_currentGear, oldGear);
 	      }
 
@@ -57,15 +62,25 @@
 	    public class Consumer 
 	    {
 	      private Engine _engine;
-	      public Consumer (Engine engine) 
+	      private String _name;
+	      public Consumer (String name, Engine engine) 
 	      {
+	      	_name = name;
 	        _engine = engine;
+	        Console.WriteLine("{0}: Subscring to OnSwitchGearEvent...", _name);
 	        _engine.OnSwitchGearEvent += new SwitchGearEvent(SwitchedGear);
 	      }
 
 	      public void SwitchedGear(object sender, SwitchedGearEventArgs args) 
 	      {
-	      	Console.WriteLine("args in consumer {0} {1}", args.NewVal, args.OldVal);
+	      	Console.WriteLine("{2}: args in consumer {0} {1}", args.NewVal, args.OldVal, _name);
+	      }
+
+	      public void Unsubscribe() 
+	      {
+	        Console.WriteLine("{0}: Unsubscring to OnSwitchGearEvent...", _name);
+	      	_engine.OnSwitchGearEvent -= new SwitchGearEvent(SwitchedGear);
+	      	this._engine = null;
 	      }
 	    }
 	}
