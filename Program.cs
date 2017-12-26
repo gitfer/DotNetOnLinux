@@ -11,57 +11,61 @@
 	            engine.SwitchGear();
 	        }
 	    }
+
 	    public class Engine 
 	    {
-
-	      private int _currentGear;
+	    	private int _currentGear;
 	      public Engine () 
 	      {
-	        	_currentGear = 0;
+	        _currentGear = 0;
 	      }
-	      
-	      public event EngineStartedEventHandler EngineStartedEvent;
 
-	      public void SwitchGear() 
-	      {
+	      public void SwitchGear(){
 	      	var oldGear = _currentGear;
-	      	_currentGear = _currentGear + 1;
-	      	Console.WriteLine("GearSwitched in Engine {0} {1}", _currentGear, oldGear);
-	      	this.OnEngineStarted(_currentGear, oldGear);
+	      	_currentGear = _currentGear+1;
+	      	this.OnSwitchGear(_currentGear, oldGear);
 	      }
 
-	      private void OnEngineStarted(int newGear, int oldGear) 
+	      public event SwitchGearEvent OnSwitchGearEvent;
+
+	      public void OnSwitchGear(int currentGear, int oldGear) 
 	      {
-	      	if(EngineStartedEvent != null){
-	      		var nameChangingEventHandlerArgs = new NameChangingEventHandlerArgs();
-	      		nameChangingEventHandlerArgs.OldGear = oldGear;
-	      		nameChangingEventHandlerArgs.NewGear = newGear;
-	      		EngineStartedEvent(this, nameChangingEventHandlerArgs);
+	      	if(OnSwitchGearEvent != null)
+	      	{
+	      		Console.WriteLine("args in publisher {0} {1}", currentGear, oldGear);
+	      		OnSwitchGearEvent(this, new SwitchedGearEventArgs(currentGear, oldGear));
 	      	}
+	      	
 	      }
 
 	    }
-	    public delegate void EngineStartedEventHandler(object sender, NameChangingEventHandlerArgs args);
 
-	     public class NameChangingEventHandlerArgs : EventArgs
+	    public class SwitchedGearEventArgs : EventArgs
 	    {
-	    	public int OldGear { get; set; }
-	    	public int NewGear { get; set; }
+	    	public int NewVal { get; set; }
+	    	public int OldVal { get; set; }
+
+	      public SwitchedGearEventArgs (int newVal, int oldVal) 
+	      {
+	        this.NewVal = newVal;
+	        this.OldVal = oldVal;
+	      }
 	    }
+
+	    public delegate void SwitchGearEvent(object sender, SwitchedGearEventArgs args);
 
 	    public class Consumer 
 	    {
-    	  private Engine _engine;
-
+	      private Engine _engine;
 	      public Consumer (Engine engine) 
 	      {
 	        _engine = engine;
-	        _engine.EngineStartedEvent += new EngineStartedEventHandler(GearSwitched);
+	        _engine.OnSwitchGearEvent += new SwitchGearEvent(SwitchedGear);
 	      }
 
-	      public void GearSwitched(object sender, NameChangingEventHandlerArgs args) 
+	      public void SwitchedGear(object sender, SwitchedGearEventArgs args) 
 	      {
-	      	Console.WriteLine("Event in consumer {0} {1}", args.NewGear, args.OldGear);
+	      	Console.WriteLine("args in consumer {0} {1}", args.NewVal, args.OldVal);
 	      }
 	    }
 	}
