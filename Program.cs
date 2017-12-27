@@ -1,5 +1,6 @@
 	using System;
 	using Structural;
+	using Behavioral;
 
 	namespace DotNetOnLinux
 	{
@@ -13,21 +14,33 @@
 	            engine.SwitchGear();
 	            consumer.Unsubscribe();
 	            engine.SwitchGear();
-	            
+
 	            Console.WriteLine("");
 	            Console.WriteLine("============ Structural patterns (realize relationships between entities) ============");
 	            Console.WriteLine("~~~~~~~~~~~~~ Facade (A single class that represents an entire subsystem) ~~~~~~~~~~~~~");
 	            Structural.Facade facade = new Structural.Facade();
 	            facade.AddMethod();
 	            Console.WriteLine("~~~~~~~~~~~~~ Decorator (Attach additional responsibilities to an object dynamically) ~~~~~~~~~~~~~");
-				ConcreteDecorator cd = new ConcreteDecorator();
+				ConcreteDecorator decorator = new ConcreteDecorator();
 				ConcreteComponent concreteComponent = new ConcreteComponent();
-				cd.SetComponent(concreteComponent);	            
-				cd.Operation();
+				decorator.SetComponent(concreteComponent);	            
+				decorator.Operation();
 
 	            Console.WriteLine("");
-	            Console.WriteLine("============ Behavioural patterns (communications between entities) ============");
-	            Console.WriteLine("~~~~~~~~~~~~~ Observer (one-to-many dependency between objects) ~~~~~~~~~~~~~");
+	            Console.WriteLine("============ Behavioral patterns (communications between entities) ============");
+	            Console.WriteLine("~~~~~~~~~~~~~ Observer (when one object changes state, all its dependents are notified and updated automatically) ~~~~~~~~~~~~~");
+
+	            ConcreteSubject subject = new ConcreteSubject();
+	            ConcreteObserver observer = new ConcreteObserver(subject, "X");
+	            subject.Attach(observer);
+			    // Change subject and notify observers
+			    subject.State = "ABC";
+			    subject.Notify();
+	            Console.WriteLine("~~~~~~~~~~~~~ Strategy (Define a family of algorithms, encapsulate each one, and make them interchangeable) ~~~~~~~~~~~~~");
+	            Context context = new Context(new SortStrategy1());
+	            context.ContextSortInterface();
+	            context = new Context(new SortStrategy2());
+	            context.ContextSortInterface();
 	        }
 	    }
 
