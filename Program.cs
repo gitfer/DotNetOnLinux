@@ -1,4 +1,5 @@
 	using System;
+	using Structural;
 
 	namespace DotNetOnLinux
 	{
@@ -12,6 +13,21 @@
 	            engine.SwitchGear();
 	            consumer.Unsubscribe();
 	            engine.SwitchGear();
+	            
+	            Console.WriteLine("");
+	            Console.WriteLine("============ Structural patterns (realize relationships between entities) ============");
+	            Console.WriteLine("~~~~~~~~~~~~~ Facade (A single class that represents an entire subsystem) ~~~~~~~~~~~~~");
+	            Structural.Facade facade = new Structural.Facade();
+	            facade.AddMethod();
+	            Console.WriteLine("~~~~~~~~~~~~~ Decorator (Attach additional responsibilities to an object dynamically) ~~~~~~~~~~~~~");
+				ConcreteDecorator cd = new ConcreteDecorator();
+				ConcreteComponent concreteComponent = new ConcreteComponent();
+				cd.SetComponent(concreteComponent);	            
+				cd.Operation();
+
+	            Console.WriteLine("");
+	            Console.WriteLine("============ Behavioural patterns (communications between entities) ============");
+	            Console.WriteLine("~~~~~~~~~~~~~ Observer (one-to-many dependency between objects) ~~~~~~~~~~~~~");
 	        }
 	    }
 
