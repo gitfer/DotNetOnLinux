@@ -1,6 +1,7 @@
 	using System;
 	using Structural;
 	using Behavioral;
+	using Creational;
 
 	namespace DotNetOnLinux
 	{
@@ -41,6 +42,15 @@
 	            context.ContextSortInterface();
 	            context = new Context(new SortStrategy2());
 	            context.ContextSortInterface();
+
+	            Console.WriteLine("============ Structural patterns ============");
+	            Console.WriteLine("~~~~~~~~~~~~~ Singleton (Ensure a class has only one instance and provide a global point of access to it) ~~~~~~~~~~~~~");
+	            Cache instance1 = Cache.Instance();
+	            Cache instance2 = Cache.Instance();
+	            Console.WriteLine("instance1 == instance2? {0}", instance1 == instance2);
+	            Console.WriteLine("~~~~~~~~~~~~~ FactoryMethod ~~~~~~~~~~~~~");
+	            IComponent component = Creator.Create("first");
+
 	        }
 	    }
 
